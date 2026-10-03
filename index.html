@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>
+  (function() {
+    var GA_ID = 'G-QVQ2V5969P';
+    var isLocalDev = ['localhost', '127.0.0.1', ''].includes(location.hostname);
+    if (isLocalDev) return;
+    var gaQ = new URLSearchParams(location.search); if (gaQ.get('obs') === '1' || gaQ.get('no_ga') === '1') return;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', GA_ID);
+    document.addEventListener('click', function(e) {
+      var a = e.target && e.target.closest ? e.target.closest('a[href*="booth.pm"]') : null;
+      if (!a) return;
+      gtag('event', 'booth_click', { link_url: a.href, link_id: a.id || '', link_text: (a.textContent || '').trim().slice(0, 40) });
+    });
+  })();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="宛名ラベルを無料で作成・印刷できるWebツール(登録不要)。A4ラベルシール12面(エーワン72212など各社共通)・10面・24面や、普通紙8分割(コンビニ印刷向け)に、郵便番号・住所・名前と差出人を入れて印刷。使いかけのシートの途中から印刷、印刷位置の調整、差出人ラベル作成にも対応。入力した住所は送信されません。">
+<link rel="canonical" href="https://uuhai0625.github.io/atena-label/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="宛名ラベル作成ツール(無料・登録不要)|A4 12面・10面・24面・差出人入り・コンビニ印刷">
+<meta property="og:description" content="宛名ラベルを無料で作成・印刷できるWebツール(登録不要)。A4ラベルシール12面(エーワン72212など各社共通)・10面・24面や、普通紙8分割(コンビニ印刷向け)に、郵便番号・住所・名前と差出人を入れて印刷。使いかけのシートの途中から印刷、印刷位置の調整、差出人ラベル作成にも対応。入力した住所は送信されません。">
+<meta property="og:url" content="https://uuhai0625.github.io/atena-label/">
+<title>宛名ラベル作成ツール(無料・登録不要)|A4 12面・10面・24面・差出人入り・コンビニ印刷</title>
+<style>
+  :root {
+    --bg: #f7f4f1;
+    --panel: #ffffff;
+    --border: #e4ddd6;
+    --field-border: #85776c;
+    --text: #2b2420;
+    --muted: #5f544c;
+    --accent: #b14a2a;
+    --accent-dark: #86361d;
+    --soft: #f8ebe5;
+    --warn-bg: #fff4e0;
+    --warn-text: #7a4b00;
+    --ng: #b3261e;
+    --locked: #b9aea5;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  header { background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color: #fff; padding: 24px 20px 18px; text-align: center; }
+  header h1 { margin: 0 0 6px; font-size: 1.35rem; }
+  header p { margin: 0; font-size: .9rem; }
+  main { max-width: 1040px; margin: 0 auto; padding: 22px 16px 50px; }
+  section.card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; margin-bottom: 18px; }
+  section.card h2 { margin: 0 0 6px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  section.card h3 { margin: 14px 0 4px; font-size: .95rem; }
+  .desc { color: var(--muted); font-size: .84rem; margin: 0 0 12px; }
+  .fine { color: var(--muted); font-size: .8rem; margin: 8px 0 0; }
+  .badge { display: inline-block; font-size: .72rem; padding: 2px 8px; border-radius: 999px; background: #fff1cc; color: #7a5600; font-weight: bold; }
+  .hidden { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  label.field { display: block; margin-bottom: 10px; }
+  .lbl { font-size: .82rem; font-weight: bold; display: block; }
+  .hint { font-size: .78rem; color: var(--muted); font-weight: normal; display: block; margin-top: 2px; }
+  input[type=text], input[type=tel], input[type=number], select, textarea { width: 100%; margin-top: 4px; padding: 8px 10px; min-height: 44px; border: 1px solid var(--field-border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: #fff; color: var(--text); }
+  textarea { min-height: 110px; font-size: .9rem; }
+  .row2, .row3 { display: flex; gap: 10px; }
+  .row2 > *, .row3 > * { flex: 1; min-width: 0; }
+  .row3 > .narrow { flex: 0 0 9.5em; }
+  label.check { display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: .86rem; cursor: pointer; }
+  label.check input { width: 20px; height: 20px; margin: 0; flex-shrink: 0; }
+  .seg { display: flex; gap: 8px; flex-wrap: wrap; }
+  .seg label { min-height: 44px; display: flex; align-items: center; gap: 6px; border: 1px solid var(--field-border); border-radius: 8px; padding: 6px 12px; font-size: .86rem; cursor: pointer; background: #fff; }
+  .seg label.on { border-color: var(--accent); background: var(--soft); font-weight: bold; }
+  .seg label:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .seg small { font-weight: normal; color: var(--muted); }
+  fieldset.plain { border: none; padding: 0; margin: 0 0 12px; min-width: 0; }
+  fieldset.plain legend { font-size: .85rem; font-weight: bold; padding: 0; margin-bottom: 5px; }
+  details.adv { margin-top: 6px; font-size: .86rem; }
+  details.adv summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: bold; color: var(--accent-dark); list-style: none; }
+  details.adv summary::-webkit-details-marker { display: none; }
+  details.adv summary::before { content: "▸"; margin-right: 6px; }
+  details.adv[open] summary::before { content: "▾"; }
+  details.adv summary:focus-visible { outline: 2px solid var(--accent-dark); outline-offset: 2px; }
+
+  fieldset.rcp { border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px 2px; margin: 0 0 10px; min-width: 0; }
+  fieldset.rcp legend { float: left; padding: 0; font-size: .85rem; font-weight: bold; line-height: 40px; }
+  fieldset.rcp .del { float: right; min-width: 44px; min-height: 40px; border: 1px solid var(--field-border); border-radius: 8px; background: #fff; cursor: pointer; font-family: inherit; color: var(--text); }
+  fieldset.rcp .body { clear: both; }
+  fieldset.rcp.over { border-color: var(--ng); }
+  fieldset.rcp .over-msg { color: var(--ng); font-size: .8rem; font-weight: bold; margin: 0 0 6px; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+  .btn { min-height: 44px; padding: 9px 16px; border-radius: 8px; font-size: .88rem; cursor: pointer; border: 1px solid var(--field-border); background: #fff; color: var(--text); font-family: inherit; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: bold; }
+  .btn.small { min-height: 40px; padding: 6px 12px; font-size: .82rem; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn:focus-visible { outline: 2px solid var(--accent-dark); outline-offset: 2px; }
+  .status { font-size: .82rem; color: var(--muted); margin-top: 6px; min-height: 1.2em; }
+  .status.err { color: var(--ng); font-weight: bold; }
+  .warn { background: var(--warn-bg); color: var(--warn-text); border-radius: 8px; padding: 8px 12px; font-size: .83rem; margin: 8px 0 0; }
+  .guide { font-size: .86rem; }
+  .guide ul, .guide ol { padding-left: 1.3em; margin: 6px 0; }
+  .guide li { margin: 4px 0; }
+  .mobile-only { display: none; }
+
+  .locked-panel { border: 1px dashed var(--locked); border-radius: 10px; padding: 16px; text-align: center; color: var(--muted); background: #fbf9f7; }
+  .locked-panel .lead { color: var(--text); font-weight: bold; }
+  .locked-panel .feat-list { text-align: left; max-width: 620px; margin: 10px auto; font-size: .85rem; padding-left: 1.2em; }
+  .buy-btn { display: inline-block; margin-top: 8px; background: var(--accent-dark); color: #fff; font-weight: bold; padding: 11px 22px; border-radius: 999px; text-decoration: none; font-size: .9rem; }
+  
+
+  /* ===== 印刷シート ===== */
+  #sheetsWrap { overflow: hidden; }
+  .sheet-scale { transform-origin: top left; }
+  .sheet { width: 210mm; height: 297mm; background: #fff; position: relative; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.18); margin-bottom: 8mm; }
+  .sheet-no { font-size: .8rem; color: var(--muted); margin: 0 0 4px; }
+  .cell { position: absolute; overflow: hidden; }
+  .cell.guide-line { outline: .2mm dashed #c9b9ad; outline-offset: -.1mm; }
+  .cell.empty { background: repeating-linear-gradient(45deg, #faf7f4, #faf7f4 2mm, #f1ebe6 2mm, #f1ebe6 4mm); }
+  .cell.off { background: repeating-linear-gradient(45deg, #fde9e7, #fde9e7 2mm, #f6cfcb 2mm, #f6cfcb 4mm); }
+  .cell.cut::after { content: ""; position: absolute; inset: 0; border-right: .25mm dashed #a8a8a8; border-bottom: .25mm dashed #a8a8a8; pointer-events: none; }
+  .cell.cut.c0::after { border-left: .25mm dashed #a8a8a8; }
+  .cell.cut.r0::after { border-top: .25mm dashed #a8a8a8; }
+  .lab { position: absolute; inset: 0; display: flex; flex-direction: column; color: #000; font-family: var(--l-font); line-height: 1.3; }
+  .lab .l-zip { white-space: nowrap; letter-spacing: .08em; line-height: 1.62; }
+  .lab .l-addr div { white-space: nowrap; line-height: 1.62; }
+  .lab .l-name { margin-top: auto; margin-bottom: auto; font-weight: bold; text-align: center; white-space: nowrap; padding: 0 1mm; line-height: 1.4; }
+  .lab .l-name .hon { font-weight: normal; margin-left: .25em; }
+  .lab .l-fromwrap { border-top: .2mm solid #777; padding-top: .6mm; }
+  .lab .l-from { color: #333; white-space: nowrap; line-height: 1.3; }
+  .lab.sender .l-name { text-align: left; margin-top: .8mm; margin-bottom: 0; padding: 0; }
+  .lab .wrap { white-space: normal !important; word-break: break-all; }
+  .lab.over { box-shadow: inset 0 0 0 .5mm #d33; }
+  .lab.over::after { content: "!"; position: absolute; right: 1mm; top: .5mm; color: #d33; font-weight: bold; font-size: 9pt; }
+
+  footer { max-width: 1040px; margin: 0 auto; padding: 0 16px 40px; font-size: .8rem; color: var(--muted); }
+  footer a { color: var(--muted); }
+  @media (max-width: 700px) { .mobile-only { display: inline-block; } }
+  @media (max-width: 600px) {
+    .row2, .row3 { flex-direction: column; gap: 0; }
+    .row3 > .narrow { flex: 1; }
+    section.card { padding: 16px 14px; }
+  }
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    body { background: #fff; }
+    body > *:not(main), main > *:not(#preview-card) { display: none !important; }
+    main { max-width: none; padding: 0; margin: 0; }
+    #preview-card { border: none; padding: 0; margin: 0; }
+    #preview-card > *:not(#sheetsWrap) { display: none !important; }
+    #sheetsWrap { overflow: visible; height: auto !important; margin: 0 !important; }
+    .sheet-scale { transform: none !important; }
+    .sheet-no { display: none; }
+    .sheet { box-shadow: none; margin: 0; height: 296mm; page-break-after: always; break-after: page; }
+    .sheet:last-child { page-break-after: auto; break-after: auto; }
+    .cell.guide-line { outline: none; }
+    .cell.empty, .cell.off { background: none; }
+    .lab.over { box-shadow: none; }
+    .lab.over::after { content: none; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>宛名ラベル作成ツール</h1>
+  <p>A4のラベルシール(12面・10面・24面)や普通紙に、宛名と差出人を入れて印刷できます。入力した住所はどこにも送信されません・登録不要</p>
+</header>
+
+<main>
+
+  <section class="card">
+    <h2>① 作るラベルと用紙を選ぶ</h2>
+    <fieldset class="plain">
+      <legend>作るラベル</legend>
+      <div class="seg" id="modeSeg">
+        <label class="on"><input type="radio" name="mode" value="to" checked> 宛先ラベル</label>
+        <label><input type="radio" name="mode" value="from"> 差出人ラベル(全部同じ)</label>
+      </div>
+    </fieldset>
+    <fieldset class="plain">
+      <legend>ラベル用紙(袋に書かれた「面数」とラベルの大きさを確かめてください)</legend>
+      <div class="seg" id="sheetSeg">
+        <label class="on"><input type="radio" name="sheet" value="a12" checked> A4 12面 <small>(86.4×42.3mm)</small></label>
+        <label><input type="radio" name="sheet" value="a12g"> A4 12面 <small>(83.8×42.3mm・間隔あり)</small></label>
+        <label><input type="radio" name="sheet" value="a10"> A4 10面 <small>(86.4×50.8mm)</small></label>
+        <label><input type="radio" name="sheet" value="a24"> A4 24面 <small>(66×33.9mm)</small></label>
+        <label><input type="radio" name="sheet" value="plain8"> 普通紙 8分割 <small>(切って貼る・コンビニ印刷向け)</small></label>
+        
+      </div>
+      <span class="hint" id="sheetHint"></span>
+    </fieldset>
+    
+    <div class="row2">
+      <label class="field">
+        <span class="lbl">何番目のラベルから印刷する?</span>
+        <select id="in-start"></select>
+        <span class="hint">使いかけのシートなら、残っている最初のラベルを選びます(左上から右へ数えます)</span>
+      </label>
+      <label class="field">
+        <span class="lbl">書体</span>
+        <select id="in-font">
+          <option value="gothic">ゴシック</option>
+          <option value="mincho">明朝</option>
+        </select>
+      </label>
+    </div>
+    <details class="adv">
+      <summary>印刷位置がずれるとき(位置の調整)</summary>
+      <div class="row2">
+        <label class="field"><span class="lbl">右へずらす(mm)</span><input type="number" id="in-dx" min="-10" max="10" step="0.5" value="0" inputmode="decimal"><span class="hint">左へずらすときはマイナス</span></label>
+        <label class="field"><span class="lbl">下へずらす(mm)</span><input type="number" id="in-dy" min="-10" max="10" step="0.5" value="0" inputmode="decimal"><span class="hint">上へずらすときはマイナス</span></label>
+      </div>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>② 差出人(あなた)</h2>
+    <div class="row3">
+      <label class="field narrow"><span class="lbl">郵便番号</span><input type="text" id="s-zip" maxlength="10" placeholder="123-4567" inputmode="numeric" autocomplete="postal-code"></label>
+      <label class="field"><span class="lbl">名前・屋号</span><input type="text" id="s-name" maxlength="40" placeholder="例: うさぎ工房 山田" autocomplete="name"></label>
+      <label class="field narrow"><span class="lbl">電話(任意)</span><input type="tel" id="s-tel" maxlength="20" placeholder="090-0000-0000" autocomplete="tel"></label>
+    </div>
+    <label class="field"><span class="lbl">住所</span><input type="text" id="s-addr" maxlength="80" placeholder="例: 東京都千代田区千代田1-1 ○○ハイツ101" autocomplete="street-address"></label>
+    <label class="check" id="withFromField"><input type="checkbox" id="opt-withfrom" checked> 宛先ラベルの下に、差出人を小さく入れる</label>
+    <label class="check"><input type="checkbox" id="opt-remember" checked> 差出人をこのブラウザに記憶する(共用のパソコンではオフに)</label>
+  </section>
+
+  <section class="card" id="rcp-card">
+    <h2>③ 宛先</h2>
+    <p class="desc" id="rcpDesc">郵便番号はハイフンなしでも大丈夫です。住所が長いときは2行目(建物名など)に分けると読みやすくなります。</p>
+    
+    <div id="rcpList"></div>
+    <div class="btn-row">
+      <button class="btn" type="button" id="addRcp">+ 宛先を追加</button>
+      <button class="btn" type="button" id="clearRcp">宛先を全部消す</button>
+      <button class="btn mobile-only" type="button" id="toPreview">④ 印刷イメージを見る ↓</button>
+    </div>
+    <div class="status" id="st-rcp" role="status"></div>
+  </section>
+
+  <section class="card" id="preview-card" tabindex="-1">
+    <h2>④ 印刷イメージ</h2>
+    <p class="status" id="previewInfo"></p>
+    <div id="warns"></div>
+    <div class="btn-row" style="margin-top:4px;">
+      <button class="btn primary" type="button" id="printBtn">印刷する(PDFで保存もできます)</button>
+      <label class="check" style="min-height:40px;"><input type="checkbox" id="opt-guide" checked> 画面にラベルの枠を表示(印刷はされません)</label>
+    </div>
+    <div class="status" id="st-print" role="status"></div>
+    <details class="adv">
+      <summary>印刷画面の設定(ブラウザ別)</summary>
+      <ul class="fine" style="padding-left:1.2em;margin-top:0;">
+        <li>Chrome・Edge: 「余白」を「なし」、「倍率」は「デフォルト」(100%)にします。「ヘッダーとフッター」はオフ。</li>
+        <li>Firefox: 「拡大縮小」を100%、「余白」を「なし」にして、「ヘッダーとフッターを印刷」のチェックを外します。</li>
+        <li>Safari(Mac): 「拡大縮小」を100%にします。</li>
+        <li>iPhone・Android: 倍率や余白を選べないことが多いので、ラベル用紙への印刷はパソコンがおすすめです。スマホからは「普通紙 8分割」でコンビニ印刷(下の案内)にすると確実です。</li>
+      </ul>
+    </details>
+    <p class="fine">最初は普通紙に印刷して、ラベル用紙と重ねて位置を確かめるのがおすすめです。ずれるときは①の「位置の調整」で直せます。</p>
+    <div id="sheetsWrap" style="margin-top:12px;"><div class="sheet-scale" id="sheets"></div></div>
+  </section>
+
+  <section class="card" id="pro-section">
+    <h2>BOOTHの宛名印刷用CSVからまとめて作る <span class="badge">買い切り版 ¥100</span></h2>
+    <div class="locked-panel">
+      <p class="lead">BOOTHの「宛名印刷用CSV」をそのまま読み込んで、ラベルにまとめて印刷。月額なし・回数制限なし。</p>
+      <p>このページの機能は無料でそのまま使えます(1シート分まで)。買い切り版(ダウンロード購入)では、次の機能が増えます:</p>
+      <ul class="feat-list">
+        <li><strong>CSV・表の取り込みで一括作成</strong>: BOOTHの宛名印刷用CSVはそのまま。minne・Creema・BASEの注文CSVやExcelの表も、郵便番号・住所・名前の列を選べば取り込めます(列は自動で推測・同じ宛先の重複はまとめます)</li>
+        <li><strong>300件まで・何シートでも</strong>: 続けて複数ページに印刷</li>
+        <li><strong>用紙を追加</strong>: 18面・21面・44面、寸法を入れて好きなラベル用紙にも</li>
+        <li><strong>宛先リストの保存</strong>(10件まで): イベント通販・年賀状・取引先などを名前をつけて保存・呼び出し</li>
+        <li>パソコン向けのHTMLファイルです。ダブルクリックで開くだけ、ネットにつながっていなくても使えます</li>
+      </ul>
+      <a class="buy-btn" href="https://uuhai0625.booth.pm/items/8933734" id="buyLink" target="_blank" rel="noopener">買い切り版を見る(BOOTH・新しいタブ)</a>
+    </div>
+  </section>
+
+  
+
+  <section class="card guide" id="guide">
+    <h2>宛名ラベルの作り方</h2>
+    <ol>
+      <li>①で作るラベルとラベル用紙を選びます。</li>
+      <li>②に差出人(あなた)、③に宛先を入れます。</li>
+      <li>「印刷する」を押し、余白「なし」・倍率100%で印刷します(④の「印刷画面の設定」も見てください)。ずれるときは①の「位置の調整」で直せます。</li>
+    </ol>
+    <h2 style="margin-top:16px;">コンビニで印刷する(プリンターがないとき)</h2>
+    <ol>
+      <li>①で「普通紙 8分割」を選び、「印刷する」の画面で「PDFに保存」を選びます(iPhoneは、印刷画面の共有ボタンから「ファイルに保存」でPDFにできます)。</li>
+      <li>保存したPDFを、コンビニのネットプリント(セブン-イレブンの「netprint」、ローソン・ファミリーマートなどの「ネットワークプリント」)に登録して、A4の普通紙に印刷します。少し縮んで印刷されても、切り取り線ごと縮むので問題ありません。</li>
+      <li>切り取り線で切って、封筒にのりで全面を貼ります(はがれないように、端までしっかり貼ってください)。8分割の1枚ははがきより大きいので、はがきには貼れません。</li>
+    </ol>
+    <p class="fine">PDFには宛先の名前と住所が入っています。印刷が終わったら、ネットプリントの登録とPDFファイルを削除してください。</p>
+    <h2 style="margin-top:16px;">宛名ラベルの注意</h2>
+    <ul>
+      <li>日本郵便の「機械で読み取りやすい印刷」の案内に合わせて、郵便番号は「〒」を付けずに住所の上に、行と行の間をあけて印刷します。宛名は封筒の中央あたりに貼りましょう。</li>
+      <li>敬称は個人なら「様」、会社や部署あてなら「御中」。「○○課御中 山田様」のように重ねて書くのは誤りです。</li>
+      <li>差出人は、届かなかったときの返送先になります。封筒の裏に差出人ラベルを貼るのがおすすめです(表に入れるときは、宛名より小さく、下に区切って入れます)。</li>
+      <li>ゆうパックの送り状(複写式)には宛名ラベルは使えません。クリックポストは公式サイトで宛名入りのラベルを印刷するので、このツールは不要です。ゆうゆうメルカリ便・あんしんBOOTHパック・ゆうゆうBOOTHパックなどの匿名配送も、宛名を書く必要がありません。</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <p id="privacyNote">本ツールは完全にブラウザ内で動作し、入力した住所・名前はどこにも送信されません。</p>
+  <p>イベントの値札を作るなら <a href="https://uuhai0625.github.io/nefuda-maker/" target="_blank" rel="noopener">値札メーカー</a> もどうぞ。<a href="https://uuhai0625.booth.pm/" target="_blank" rel="noopener">他のツールも見る(BOOTHショップ)</a></p>
+  <p>不具合・ご要望は X <a href="https://x.com/uuhai0625" target="_blank" rel="noopener">@uuhai0625</a> まで。</p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var EDITION = "free"; // "full" で買い切り完全版
+
+  function track(name, params) {
+    if (!window.dataLayer) return;
+    (function () { window.dataLayer.push(arguments); })("event", name, params || {});
+  }
+  var $ = function (id) { return document.getElementById(id); };
+  function el(tag, attrs, text) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) { if (k === "class") e.className = attrs[k]; else e.setAttribute(k, attrs[k]); });
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function setSt(id, msg, err) { var e = $(id); e.textContent = msg; e.classList.toggle("err", !!err); }
+  var own = function (o, k) { return Object.prototype.hasOwnProperty.call(o, k); };
+
+  // ラベル用紙(mm)。ml/mt: 左と上の余白、gx/gy: ラベルの間(メーカーの規格図・日本郵便の対応ラベル一覧による)
+  var SHEETS = {
+    a12: { label: "A4 12面", w: 86.4, h: 42.3, cols: 2, rows: 6, ml: 18.6, mt: 21.2, gx: 0, gy: 0, hint: "86.4×42.3mmのラベルが2列×6段(エーワン72212・コクヨKPC-E1121などの各社共通サイズ)。" },
+    a12g: { label: "A4 12面(間隔あり)", w: 83.8, h: 42.3, cols: 2, rows: 6, ml: 19.3, mt: 21.5, gx: 3.8, gy: 0, hint: "83.8×42.3mmのラベルが2列×6段で、左右のラベルの間にすき間があるタイプ(エーワン28184など)。" },
+    a10: { label: "A4 10面", w: 86.4, h: 50.8, cols: 2, rows: 5, ml: 18.6, mt: 21.2, gx: 0, gy: 0, hint: "86.4×50.8mmのラベルが2列×5段(エーワン72210・コクヨKPC-E1101など)。" },
+    a24: { label: "A4 24面", w: 66, h: 33.9, cols: 3, rows: 8, ml: 6, mt: 12.9, gx: 0, gy: 0, hint: "66×33.9mmのラベルが3列×8段(エーワン72224など)。宛先には少し小さめです。" },
+    plain8: { label: "普通紙 8分割", w: 105, h: 74.25, cols: 2, rows: 4, ml: 0, mt: 0, gx: 0, gy: 0, plain: true, hint: "A4の普通紙を8つに分けて、切り取り線つきで印刷します。切って封筒に貼ってください。" }
+  };
+  var FREE_SHEETS = 1;          // 無料版は1シート分まで
+  var MAX_LABELS = 300;
+  var FONTS = {
+    gothic: '"Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif',
+    mincho: '"Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif'
+  };
+  var HONORS = ["様", "御中", "行", "なし"];
+  var SENDER_KEY = "atena_sender_v1", PREF_KEY = "atena_pref_v1", RCP_KEY = "atena_rcp_v1";
+
+  // 買い切り版で差し替えるフック
+  var maxPages = function () { return FREE_SHEETS; };
+  var customSheet = null;
+  var syncSheetExtra = function () {};
+
+  // ===== 状態 =====
+  var state = { sheet: "a12", start: 1, font: "gothic", dx: 0, dy: 0, mode: "to", withFrom: true, guide: true, remember: true, rcps: [blankRcp()] };
+  function blankRcp() { return { zip: "", addr1: "", addr2: "", name: "", honor: "様" }; }
+  function cleanRcp(o) {
+    var r = blankRcp(); if (!o || typeof o !== "object") return r;
+    ["zip", "addr1", "addr2", "name"].forEach(function (k) { if (typeof o[k] === "string") r[k] = o[k].slice(0, k === "zip" ? 10 : 80); });
+    if (HONORS.indexOf(o.honor) >= 0) r.honor = o.honor;
+    return r;
+  }
+  function sheetSpec() {
+    if (state.sheet === "custom" && customSheet) return customSheet();
+    return own(SHEETS, state.sheet) ? SHEETS[state.sheet] : SHEETS.a12;
+  }
+  function zipDigits(z) {
+    return String(z || "").replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); }).replace(/[^0-9]/g, "");
+  }
+  // 入力欄用: 7桁なら 123-4567 に整える
+  function fmtZip(z) {
+    var d = zipDigits(z);
+    if (d.length === 7) return d.slice(0, 3) + "-" + d.slice(3);
+    return String(z || "").replace(/^[〒\s]+/, "").trim();
+  }
+  // ラベル用: 「〒」なし・全角数字(日本郵便の「機械で読み取りやすい印刷」の例に合わせる)
+  function labelZip(z) {
+    var d = zipDigits(z);
+    var s = d.length === 7 ? d.slice(0, 3) + "-" + d.slice(3) : String(z || "").replace(/^[〒\s]+/, "").trim();
+    return s.replace(/[0-9]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) + 0xFEE0); }).replace(/-/g, "－");
+  }
+  function sender() {
+    return { zip: fmtZip($("s-zip").value), addr: $("s-addr").value.trim(), name: $("s-name").value.trim(), tel: $("s-tel").value.trim() };
+  }
+  function filled(r) { return !!(r.name.trim() || r.addr1.trim() || r.zip.trim()); }
+
+  // ===== ラベル1枚を作る =====
+  function buildLabel(sp, data, kind, snd) {
+    var lab = el("div", { class: "lab" + (kind === "from" ? " sender" : "") });
+    // 文字がラベルの端に寄りすぎないよう、内側に余白をとる(小さいラベルは控えめに)
+    var h = sp.h, pad = sp.plain ? 7 : h >= 33 ? 4.5 : 2.5;
+    lab.style.padding = (pad - (sp.plain ? 0 : 0.5)) + "mm " + pad + "mm";
+    var small = h < 30;
+    var nameSz = Math.max(8, Math.min(18, h * 0.34)), addrSz = Math.max(6, Math.min(11, h * 0.22)), fromSz = Math.max(5.5, Math.min(7.5, h * 0.15));
+    if (sp.plain) { nameSz = 18; addrSz = 12; fromSz = 8.5; }
+    if (kind === "from") {
+      if (snd.zip) lab.appendChild(el("div", { class: "l-zip", style: "font-size:" + addrSz + "pt" }, labelZip(snd.zip)));
+      var a = el("div", { class: "l-addr" }); a.appendChild(el("div", { style: "font-size:" + addrSz + "pt" }, snd.addr)); lab.appendChild(a);
+      lab.appendChild(el("div", { class: "l-name", style: "font-size:" + Math.max(7, nameSz * 0.75) + "pt" }, snd.name));
+      if (snd.tel && !small) lab.appendChild(el("div", { class: "l-from", style: "font-size:" + addrSz * 0.9 + "pt;margin-top:auto;" }, "TEL " + snd.tel));
+      return lab;
+    }
+    if (data.zip) lab.appendChild(el("div", { class: "l-zip", style: "font-size:" + addrSz + "pt" }, labelZip(data.zip)));
+    var ad = el("div", { class: "l-addr" });
+    if (data.addr1) ad.appendChild(el("div", { style: "font-size:" + addrSz + "pt" }, data.addr1));
+    if (data.addr2) ad.appendChild(el("div", { style: "font-size:" + addrSz + "pt" }, data.addr2));
+    lab.appendChild(ad);
+    var nm = el("div", { class: "l-name", style: "font-size:" + nameSz + "pt" });
+    nm.appendChild(document.createTextNode(data.name));
+    if (data.name && data.honor !== "なし") nm.appendChild(el("span", { class: "hon" }, data.honor));
+    lab.appendChild(nm);
+    if (state.withFrom && !small && (snd.name || snd.addr)) {
+      var fb = el("div", { class: "l-fromwrap" });
+      fb.appendChild(el("div", { class: "l-from", style: "font-size:" + fromSz + "pt" }, "差出人 " + [snd.zip ? snd.zip : "", snd.addr].filter(Boolean).join(" ")));
+      fb.appendChild(el("div", { class: "l-from", style: "font-size:" + fromSz + "pt" }, [snd.name, snd.tel ? "TEL " + snd.tel : ""].filter(Boolean).join("  ")));
+      lab.appendChild(fb);
+    }
+    return lab;
+  }
+  // はみ出す行は文字を小さく(読める大きさまで)。それでも入らなければ折り返す
+  function minPt(ln, base) {
+    var floor = ln.classList.contains("l-from") ? 5.5 : ln.classList.contains("l-name") ? 7 : 6.5;
+    return Math.min(base, Math.max(floor, base * (ln.classList.contains("l-name") ? 0.6 : 0.75)));
+  }
+  function fitLabel(lab) {
+    var lines = [].slice.call(lab.querySelectorAll(".l-zip, .l-addr div, .l-name, .l-from"));
+    lines.forEach(function (ln) {
+      var base = parseFloat(ln.style.fontSize) || 9, min = minPt(ln, base);
+      ln.dataset.min = String(min);
+      var avail = ln.clientWidth, sw = ln.scrollWidth;
+      if (sw <= avail + 0.5) return;
+      // まず幅の比で一度に縮め、残りを少しずつ詰める(印刷との差を見込んで少し余裕をとる)
+      var sz = Math.max(min, Math.floor(base * (avail - 2) / sw * 4) / 4), g = 0;
+      ln.style.fontSize = sz + "pt";
+      while (g++ < 6 && ln.scrollWidth > ln.clientWidth + 0.5 && sz > min) { sz = Math.max(min, sz - 0.25); ln.style.fontSize = sz + "pt"; }
+      if (ln.scrollWidth > ln.clientWidth + 0.5) ln.classList.add("wrap");
+    });
+    // 縦にはみ出すときは、まず差出人、次に全体を少しずつ小さく(読める大きさまで)
+    [lines.filter(function (ln) { return ln.classList.contains("l-from"); }), lines].forEach(function (group) {
+      var g2 = 0;
+      while (g2++ < 20 && lab.scrollHeight > lab.clientHeight + 0.5) {
+        var changed = false;
+        group.forEach(function (ln) { var s = parseFloat(ln.style.fontSize) || 9, m = Math.min(Number(ln.dataset.min) || 5.5, s); if (s > m) { ln.style.fontSize = Math.max(m, s * 0.94) + "pt"; changed = true; } });
+        if (!changed) break;
+      }
+    });
+    lab.classList.toggle("over", lab.scrollHeight > lab.clientHeight + 0.5);
+    return !lab.classList.contains("over");
+  }
+
+  // 用紙の中に収まるラベル位置だけを使う(寸法入力や位置の調整で外にはみ出す枠は使わない)
+  function slotsOf(sp) {
+    var out = [];
+    for (var k = 0; k < sp.cols * sp.rows; k++) {
+      var c = k % sp.cols, r = Math.floor(k / sp.cols);
+      var x = sp.ml + c * (sp.w + sp.gx) + state.dx, y = sp.mt + r * (sp.h + sp.gy) + state.dy;
+      out.push({ k: k, c: c, r: r, x: x, y: y, ok: x >= -0.6 && y >= -0.6 && x + sp.w <= 210.6 && y + sp.h <= 297.6 });
+    }
+    return out;
+  }
+
+  // ===== 描画 =====
+  function render() {
+    var sp = sheetSpec(), per = sp.cols * sp.rows, snd = sender(), msgs = [];
+    var startK = Math.max(1, Math.min(per, state.start)) - 1;
+    var slots = slotsOf(sp), okCount = slots.filter(function (s) { return s.ok; }).length;
+    var firstFree = slots.filter(function (s) { return s.ok && s.k >= startK; }).length;
+    if (okCount < per) msgs.push("用紙からはみ出す位置のラベルが" + (per - okCount) + "枚あります(赤い斜線)。そこには印刷しません。寸法や位置の調整を確かめてください。");
+    var isFrom = state.mode === "from", all = isFrom ? null : state.rcps.map(function (r, i) { return { r: r, no: i + 1 }; }).filter(function (o) { return filled(o.r); });
+    var list = all, pages = 1;
+    if (!isFrom) {
+      var cap = firstFree + (maxPages() - 1) * okCount;
+      if (list.length > cap) { msgs.push(EDITION === "full" ? "一度に作れるのは" + cap + "件までです。" : "無料版は1シート分(" + cap + "件)までです。" + (list.length - cap) + "件は入っていません。まとめて作るなら買い切り版をどうぞ。"); list = list.slice(0, cap); }
+      pages = list.length <= firstFree ? 1 : 1 + Math.ceil((list.length - firstFree) / Math.max(1, okCount));
+    }
+    var box = $("sheets"); box.innerHTML = "";
+    var labs = [], overNos = [], font = FONTS[state.font] || FONTS.gothic, n = 0;
+    for (var pg = 0; pg < pages; pg++) {
+      if (pages > 1) box.appendChild(el("p", { class: "sheet-no" }, "用紙 " + (pg + 1) + " / " + pages + "枚目"));
+      var sh = el("div", { class: "sheet", role: "img" });
+      sh.style.setProperty("--l-font", font);
+      var from0 = n;
+      slots.forEach(function (s) {
+        var cell = el("div", { class: "cell" + (sp.plain ? " cut" + (s.c === 0 ? " c0" : "") + (s.r === 0 ? " r0" : "") : (state.guide ? " guide-line" : "")) });
+        cell.style.left = s.x + "mm"; cell.style.top = s.y + "mm"; cell.style.width = sp.w + "mm"; cell.style.height = sp.h + "mm";
+        if (!s.ok) { cell.classList.add("off"); sh.appendChild(cell); return; }
+        if (pg === 0 && s.k < startK) { if (state.guide) cell.classList.add("empty"); sh.appendChild(cell); return; }
+        var lab = null, no = 0;
+        if (isFrom) { if (pg === 0) lab = buildLabel(sp, null, "from", snd); }
+        else if (n < list.length) { lab = buildLabel(sp, list[n].r, "to", snd); no = list[n].no; n++; }
+        if (lab) { lab.dataset.no = String(no); cell.appendChild(lab); labs.push(lab); }
+        sh.appendChild(cell);
+      });
+      var desc = isFrom ? "差出人ラベル" : (n > from0 ? "宛先" + list[from0].no + "〜" + list[n - 1].no : "空");
+      sh.setAttribute("aria-label", "A4用紙" + (pg + 1) + "枚目の印刷イメージ(" + desc + ")");
+      box.appendChild(sh);
+    }
+    labs.forEach(function (l) { if (!fitLabel(l)) overNos.push(Number(l.dataset.no)); });
+    scalePreview();
+    markOver(overNos);
+
+    var total = isFrom ? labs.length : list.length, info;
+    if (isFrom) info = sp.label + "に差出人ラベル" + total + "枚" + (startK ? "(" + (startK + 1) + "番目のラベルから)" : "");
+    else info = total ? sp.label + "に宛先" + total + "件 → A4用紙" + pages + "枚" + (startK ? "(" + (startK + 1) + "番目のラベルから)" : "") : "③に宛先を入れると、ここに印刷イメージが出ます。";
+    $("previewInfo").textContent = info;
+    if (startK) msgs.push((startK + 1) + "番目のラベルから印刷します(1〜" + startK + "番目は空けます)。新しいシートなら①で「1番目」に戻してください。");
+    if (overNos.length) msgs.push("文字が多くてラベルに入りきらない宛先があります(宛先" + overNos.filter(Boolean).join("・") + ")。住所を2行に分ける・差出人を入れない・大きいラベルにする、などを試してください。");
+    if (isFrom && !snd.name && !snd.addr) msgs.push("②に差出人の名前と住所を入れてください。");
+    if (!isFrom) {
+      var noName = list.filter(function (o) { return !o.r.name.trim(); }).map(function (o) { return o.no; });
+      var badZip = list.filter(function (o) { return zipDigits(o.r.zip).length !== 7; }).map(function (o) { return o.no; });
+      if (noName.length) msgs.push("名前が空欄の宛先があります(宛先" + noName.join("・") + ")。");
+      if (badZip.length) msgs.push("郵便番号が7桁でない宛先があります(宛先" + badZip.join("・") + ")。表計算から写した場合、先頭の0が消えていないか確かめてください。");
+      if (sp.h < 30) msgs.push("このラベルは宛先には小さく、文字が読み取りにくくなります。差出人ラベル向きです。");
+      else if (sp.h < 40 && state.withFrom) msgs.push("小さめのラベルなので、差出人は封筒の裏に別のラベルで貼るのがおすすめです。");
+    }
+    if (snd.zip && zipDigits(snd.zip).length !== 7) msgs.push("差出人の郵便番号が7桁ではありません。");
+    setWarns(msgs);
+    $("printBtn").disabled = !labs.length;
+  }
+  function markOver(nos) {
+    document.querySelectorAll("fieldset.rcp").forEach(function (f, i) {
+      var bad = nos.indexOf(i + 1) >= 0, m = f.querySelector(".over-msg");
+      f.classList.toggle("over", bad);
+      if (bad && !m) f.querySelector(".body").insertBefore(el("p", { class: "over-msg" }, "! ラベルに入りきっていません"), f.querySelector(".body").firstChild);
+      if (!bad && m) m.remove();
+    });
+  }
+  var lastWarns = null;
+  function setWarns(msgs) {
+    var key = msgs.join("\n"); if (key === lastWarns) return; lastWarns = key;
+    var w = $("warns"); w.innerHTML = "";
+    msgs.forEach(function (m) { w.appendChild(el("p", { class: "warn" }, m)); });
+  }
+  function scalePreview() {
+    var wrap = $("sheetsWrap"), inner = $("sheets");
+    var mmPx = 96 / 25.4, sheetW = 210 * mmPx;
+    var avail = wrap.clientWidth || sheetW;
+    var s = Math.min(1, avail / sheetW);
+    inner.style.transform = "scale(" + s + ")";
+    inner.style.width = sheetW + "px";
+    wrap.style.height = (inner.scrollHeight * s) + "px";
+  }
+  var rsTimer = null;
+  window.addEventListener("resize", function () { clearTimeout(rsTimer); rsTimer = setTimeout(scalePreview, 150); });
+  var rTimer = null;
+  function soon() {
+    clearTimeout(rTimer);
+    var many = state.rcps.length > 60;
+    rTimer = setTimeout(function () { render(); saveAll(); }, many ? 400 : 150);
+  }
+
+  // ===== 宛先の入力欄 =====
+  function renderRcps(focusIdx) {
+    var box = $("rcpList"); box.innerHTML = "";
+    state.rcps.forEach(function (r, i) {
+      var f = el("fieldset", { class: "rcp" });
+      f.appendChild(el("legend", null, "宛先 " + (i + 1)));
+      var del = el("button", { type: "button", class: "del", "aria-label": "宛先" + (i + 1) + "を消す" }, "×");
+      del.addEventListener("click", function () {
+        if (filled(r) && !confirm("宛先" + (i + 1) + (r.name ? "(" + r.name + ")" : "") + "を消しますか?")) return;
+        state.rcps.splice(i, 1); if (!state.rcps.length) state.rcps.push(blankRcp());
+        renderRcps(Math.min(i, state.rcps.length - 1)); setSt("st-rcp", "宛先" + (i + 1) + "を消しました。"); soon();
+      });
+      f.appendChild(del);
+      var body = el("div", { class: "body" });
+      var row = el("div", { class: "row3" });
+      row.appendChild(field("郵便番号", "zip", r, { maxlength: "10", placeholder: "1234567", inputmode: "numeric", cls: "narrow" }));
+      row.appendChild(field("名前・会社名", "name", r, { maxlength: "40", placeholder: "例: 山田 花子" }));
+      var hl = el("label", { class: "field narrow" }); hl.appendChild(el("span", { class: "lbl" }, "敬称"));
+      var sel = el("select");
+      HONORS.forEach(function (h) { var o = el("option", { value: h }, h); if (h === r.honor) o.selected = true; sel.appendChild(o); });
+      sel.addEventListener("change", function () { r.honor = sel.value; soon(); });
+      hl.appendChild(sel); row.appendChild(hl);
+      body.appendChild(row);
+      body.appendChild(field("住所(1行目)", "addr1", r, { maxlength: "80", placeholder: "例: 大阪府大阪市北区梅田1-2-3" }));
+      body.appendChild(field("住所(2行目・建物名など)", "addr2", r, { maxlength: "80", placeholder: "例: ○○マンション 405号室" }));
+      f.appendChild(body);
+      box.appendChild(f);
+    });
+    if (focusIdx != null) { var t = box.querySelectorAll("fieldset.rcp")[focusIdx]; if (t) { var inp = t.querySelector("input"); if (inp) inp.focus(); } }
+  }
+  function field(label, key, r, o) {
+    var l = el("label", { class: "field" + (o.cls ? " " + o.cls : "") });
+    l.appendChild(el("span", { class: "lbl" }, label));
+    var inp = el("input", { type: "text", maxlength: o.maxlength, placeholder: o.placeholder });
+    if (o.inputmode) inp.setAttribute("inputmode", o.inputmode);
+    inp.value = r[key];
+    inp.addEventListener("input", function () { r[key] = inp.value; soon(); });
+    if (key === "zip") inp.addEventListener("change", function () { r.zip = fmtZip(inp.value); inp.value = r.zip; soon(); });
+    l.appendChild(inp);
+    return l;
+  }
+  function addLimit() {
+    if (EDITION === "full") return MAX_LABELS;
+    var sp = sheetSpec(), startK = Math.max(1, Math.min(sp.cols * sp.rows, state.start)) - 1;
+    return Math.max(1, slotsOf(sp).filter(function (s) { return s.ok && s.k >= startK; }).length);
+  }
+  $("addRcp").addEventListener("click", function () {
+    var lim = addLimit();
+    if (state.rcps.length >= lim) { setSt("st-rcp", EDITION === "full" ? "宛先は" + MAX_LABELS + "件までです。" : "無料版は1シート分(" + lim + "件)までです。", true); return; }
+    state.rcps.push(blankRcp()); renderRcps(state.rcps.length - 1); setSt("st-rcp", "宛先" + state.rcps.length + "を追加しました。"); soon();
+  });
+  $("clearRcp").addEventListener("click", function () {
+    if (state.rcps.some(filled) && !confirm("入力した宛先を全部消しますか?")) return;
+    state.rcps = [blankRcp()]; renderRcps(0); setSt("st-rcp", "宛先を消しました。"); soon();
+  });
+  $("toPreview").addEventListener("click", function () { $("preview-card").scrollIntoView({ block: "start" }); $("preview-card").focus({ preventScroll: true }); });
+
+  // ===== 設定の欄 =====
+  function syncSeg() { document.querySelectorAll(".seg input[type=radio]").forEach(function (r) { var l = r.closest("label"); if (l) l.classList.toggle("on", r.checked); }); }
+  function fillStart() {
+    var sp = sheetSpec(), per = sp.cols * sp.rows, sel = $("in-start"); sel.innerHTML = "";
+    for (var i = 1; i <= per; i++) { var c = (i - 1) % sp.cols + 1, r = Math.floor((i - 1) / sp.cols) + 1; sel.appendChild(el("option", { value: String(i) }, i + "番目(" + r + "段目・左から" + c + "番目)")); }
+    if (state.start > per) state.start = 1;
+    sel.value = String(state.start);
+    $("sheetHint").textContent = sp.hint || "";
+  }
+  function syncMode() {
+    $("withFromField").classList.toggle("hidden", state.mode !== "to");
+    $("rcp-card").classList.toggle("hidden", state.mode !== "to");
+  }
+  document.querySelectorAll('input[name="sheet"]').forEach(function (r) {
+    r.addEventListener("change", function () { state.sheet = r.value; syncSeg(); fillStart(); syncSheetExtra(); soon(); });
+  });
+  document.querySelectorAll('input[name="mode"]').forEach(function (r) {
+    r.addEventListener("change", function () { state.mode = r.value === "from" ? "from" : "to"; syncSeg(); syncMode(); soon(); });
+  });
+  $("in-start").addEventListener("change", function () { state.start = Number($("in-start").value) || 1; soon(); });
+  $("in-font").addEventListener("change", function () { state.font = $("in-font").value === "mincho" ? "mincho" : "gothic"; soon(); });
+  function clampNum(id, min, max) { var v = Number($(id).value); return isFinite(v) ? Math.max(min, Math.min(max, v)) : 0; }
+  ["in-dx", "in-dy"].forEach(function (id) {
+    $(id).addEventListener("input", function () { state[id === "in-dx" ? "dx" : "dy"] = clampNum(id, -10, 10); soon(); });
+    $(id).addEventListener("change", function () { $(id).value = String(clampNum(id, -10, 10)); });
+  });
+  ["s-zip", "s-addr", "s-name", "s-tel"].forEach(function (id) { $(id).addEventListener("input", soon); });
+  $("s-zip").addEventListener("change", function () { $("s-zip").value = fmtZip($("s-zip").value); soon(); });
+  $("opt-withfrom").addEventListener("change", function () { state.withFrom = $("opt-withfrom").checked; soon(); });
+  $("opt-guide").addEventListener("change", function () { state.guide = $("opt-guide").checked; soon(); });
+  $("opt-remember").addEventListener("change", function () {
+    state.remember = $("opt-remember").checked;
+    if (!state.remember) { try { localStorage.removeItem(SENDER_KEY); } catch (e) {} }
+    soon();
+  });
+
+  $("printBtn").addEventListener("click", function () {
+    render();
+    track("print_click", { sheet: state.sheet, mode: state.mode, count: state.mode === "to" ? state.rcps.filter(filled).length : 0 });
+    window.print();
+  });
+
+  // ===== 保存(差出人と用紙の設定はlocalStorage、宛先と「何番目から」はタブを閉じるまでsessionStorage) =====
+  function saveAll() {
+    try {
+      localStorage.setItem(PREF_KEY, JSON.stringify({ sheet: state.sheet, font: state.font, dx: state.dx, dy: state.dy, mode: state.mode, withFrom: state.withFrom, guide: state.guide, remember: state.remember }));
+      if (state.remember) localStorage.setItem(SENDER_KEY, JSON.stringify(sender()));
+    } catch (e) {}
+    try { sessionStorage.setItem(RCP_KEY, JSON.stringify({ rcps: state.rcps, start: state.start })); } catch (e) {}
+  }
+  function loadAll() {
+    try {
+      var p = JSON.parse(localStorage.getItem(PREF_KEY) || "null");
+      if (p && typeof p === "object") {
+        if (typeof p.sheet === "string" && (own(SHEETS, p.sheet) || p.sheet === "custom")) state.sheet = p.sheet;
+        if (p.font === "mincho") state.font = "mincho";
+        if (isFinite(p.dx)) state.dx = Math.max(-10, Math.min(10, Number(p.dx)));
+        if (isFinite(p.dy)) state.dy = Math.max(-10, Math.min(10, Number(p.dy)));
+        if (p.mode === "from") state.mode = "from";
+        if (typeof p.withFrom === "boolean") state.withFrom = p.withFrom;
+        if (typeof p.guide === "boolean") state.guide = p.guide;
+        if (typeof p.remember === "boolean") state.remember = p.remember;
+      }
+      var s = state.remember ? JSON.parse(localStorage.getItem(SENDER_KEY) || "null") : null;
+      if (s && typeof s === "object") {
+        [["s-zip", "zip"], ["s-addr", "addr"], ["s-name", "name"], ["s-tel", "tel"]].forEach(function (m) { if (typeof s[m[1]] === "string") $(m[0]).value = s[m[1]].slice(0, 80); });
+      }
+    } catch (e) {}
+    try {
+      var r = JSON.parse(sessionStorage.getItem(RCP_KEY) || "null");
+      if (r && Array.isArray(r.rcps) && r.rcps.length) state.rcps = r.rcps.slice(0, MAX_LABELS).map(cleanRcp);
+      if (r && isFinite(r.start)) state.start = Math.max(1, Math.round(r.start));
+    } catch (e) {}
+  }
+  function applyState() {
+    var rs = document.querySelector('input[name="sheet"][value="' + state.sheet + '"]');
+    if (!rs) { state.sheet = "a12"; rs = document.querySelector('input[name="sheet"][value="a12"]'); }
+    rs.checked = true;
+    document.querySelector('input[name="mode"][value="' + state.mode + '"]').checked = true;
+    $("in-font").value = state.font; $("in-dx").value = String(state.dx); $("in-dy").value = String(state.dy);
+    $("opt-withfrom").checked = state.withFrom; $("opt-guide").checked = state.guide; $("opt-remember").checked = state.remember;
+    syncSeg(); fillStart(); syncMode(); syncSheetExtra();
+  }
+
+  
+
+  if (EDITION !== "full") {
+    $("privacyNote").innerHTML = '入力した住所・名前はどこにも送信されません(すべてこのブラウザの中で処理します)。このページでは利用状況の把握のためにアクセス解析(Google Analytics)を使っています(住所・名前は送られません)。<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Googleによるデータの使用について</a>';
+  }
+
+  loadAll();
+  applyState();
+  renderRcps();
+  render();
+})();
+</script>
+</body>
+</html>
